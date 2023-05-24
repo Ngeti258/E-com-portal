@@ -12,7 +12,6 @@ function check_login($con)
             return $user_data;
         }
     }
-    //redirect to login
     header("Location: index.php");
     die;
 }
@@ -23,7 +22,6 @@ function random_num($length){
     };
     $len = rand(4,$length);
     for($i=0;$i<$len;$i++){
-        #code...
         $text .=rand(0,9);
     }
     return $text;
