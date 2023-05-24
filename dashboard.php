@@ -5,6 +5,7 @@ require_once "functions.php";
 check_login($con);
 
 
+$user_id = $_SESSION['active']['id'];
 $sql = "SELECT * FROM products";
 $all_products = $con->query($sql)
 
@@ -180,11 +181,11 @@ main .card button::after{
       <a href="#" class="nav-link"><i class="fas fa-bell"></i> Notifications</a>      
     </li>
     <li class="nav-item">
-      <a href="./cart.php"class="nav-link"><i class="fas fa-shopping-cart"><span id="badge">3</span></i> Cart</a>
+      <a href="./cart.php"class="nav-link"><i class="fas fa-shopping-cart"><span id="badge"></span></i> Cart</a>
     </li>
     <li class="nav-item">
-      <a href="#" class="nav-link"><i class="fas fa-user-circle"></i> Account</a>
-    </li>
+  <a href="logout.php" class="nav-link"><i class="fas fa-user-circle"></i> Logout</a>
+</li>
   </ul>
 </nav>
 
@@ -204,7 +205,7 @@ main .card button::after{
           <p class="product_quantity"><?php echo $row["quantity"]?> kilogram</p>
           <p class="price">ksh<?php echo $row["price"]?></p>
       </div>
-      <button class="add" data-id="<?php echo $row["product_id"];?>">Add to Cart</button>
+      <button class="add" data-id="<?php echo $row["product_id"];?>" data-user="<?php echo $user_id; ?>">Add to Cart</button>
       </div>
       <?php
       }
@@ -233,25 +234,26 @@ main .card button::after{
     <script src="./assets/js/plugins.min.js"></script>
     <script src="./assets/js/custom.min.js"></script>
     <script>
-      var product_id = document.getElementsByClassName("add");
-      for(var i = 0;i<product_id.length;i++){
-        product_id[i].addEventListener("click",function(event){
-          var target = event.target;
-          var id = target.getAttribute("data-id");
-          var xml = new XMLHttpRequest();
-          xml.onreadystatechange = function(){
-            if(this.readyState == 4 && this.status == 200){
-              var data = JSON.parse(this.responseText);
-              target.innerHTML = data.in_cart;
-              document.getElementById("badge").innerHTML =data.num_cart+1
-            }
-          }
-          xml.open("GET","connection.php?id="+id,true);
-          xml.send();
-        })
+var product_id = document.getElementsByClassName("add");
+for (var i = 0; i < product_id.length; i++) {
+  product_id[i].addEventListener("click", function(event) {
+    var target = event.target;
+    var id = target.getAttribute("data-id");
+    var user = target.getAttribute("data-user");
+    var xml = new XMLHttpRequest();
+    xml.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        var data = JSON.parse(this.responseText);
+        target.innerHTML = data.in_cart;
+        document.getElementById("badge").innerHTML = data.num_cart + 1;
       }
-      
-    const slides = document.querySelectorAll('.slide');
+    }
+    xml.open("GET", "connection.php?id=" + id + "&user=" + user, true);
+    xml.send();
+  });
+}
+
+const slides = document.querySelectorAll('.slide');
 const slideshow = document.getElementById('slideshow');
 let currentSlide = 0;
 
@@ -265,6 +267,7 @@ function showSlide() {
 }
 showSlide();
 </script>
+
 
    
   </body>
