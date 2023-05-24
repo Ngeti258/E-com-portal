@@ -4,7 +4,8 @@ require_once "connection.php";
 require_once "functions.php";
 check_login($con);
 
-$sql = "SELECT * FROM cart";
+$user_id = $_SESSION['active']['id'];
+$sql = "SELECT * FROM cart WHERE user_id = $user_id";
 $all_cart = $con->query($sql)
 
 ?>
@@ -197,7 +198,7 @@ main .card button::after{
         <BR>
         <?php
       while($row_cart = mysqli_fetch_assoc($all_cart)){
-        $sql = "SELECT * FROM products WHERE product_id=".$row_cart["product_id"] ;
+        $sql = "SELECT * FROM products WHERE product_id=".$row_cart["product_id"];
         $all_products = $con->query($sql);
         while($row = mysqli_fetch_assoc($all_products)){
       ?>
