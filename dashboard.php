@@ -181,7 +181,7 @@ main .card button::after{
       <a href="#" class="nav-link"><i class="fas fa-bell"></i> Notifications</a>      
     </li>
     <li class="nav-item">
-      <a href="./cart.php"class="nav-link"><i class="fas fa-shopping-cart"><span id="badge"></span></i> Cart</a>
+      <a href="./cart.php"class="nav-link"><i class="fas fa-shopping-cart"></span></i> Cart</a>
     </li>
     <li class="nav-item">
   <a href="logout.php" class="nav-link"><i class="fas fa-user-circle"></i> Logout</a>
