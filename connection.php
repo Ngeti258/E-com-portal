@@ -1,4 +1,6 @@
 <?php
+
+
 $dbhost = "localhost";
 $dbuser = "root";
 $dbpass = "";
@@ -7,10 +9,11 @@ $dbname = "salesandmarketing";
 
 if(!$con = mysqli_connect($dbhost,$dbuser,$dbpass,$dbname)){
     die("Failed to connect!");}
-
-if(isset($_GET["id"])){
+    
+if(isset($_GET["id"]) && isset($_GET["user"])){
     $product_id = $_GET['id'];
-    $sql = "SELECT * FROM cart WHERE product_id = $product_id";
+    $user_id = $_GET['user'];
+    $sql = "SELECT * FROM cart WHERE product_id = $product_id AND user_id = $user_id";
     $result = $con->query($sql);
     $total_cart = "SELECT * FROM cart";
     $total_cart_result = $con->query($total_cart);
@@ -20,7 +23,7 @@ if(isset($_GET["id"])){
         $in_cart = "already in cart";   
         echo json_encode(["num_cart"=>$cart_num,"in_cart"=>$in_cart]);     
     }else{
-        $insert = "INSERT INTO cart(product_id) VALUES($product_id)";
+        $insert = "INSERT INTO cart(product_id,user_id) VALUES($product_id,$user_id)";
         if($con->query($insert)==true){
             $in_cart = "added into cart";
             echo json_encode(["num_cart"=>$cart_num,"in_cart"=>$in_cart]);     
