@@ -2,27 +2,32 @@
 session_start();
 include('connection.php');
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-  $username = $_POST["UserName"];
-  $password = $_POST["Password"];
+if($_SERVER['REQUEST_METHOD']== "POST"){
+  $UserName=$_POST['UserName'];
+  $Password= $_POST['Password'];
 
-  $sql = "SELECT * FROM users WHERE username = '$username' AND password = '$password'";
-  $result = mysqli_query($con, $sql);
+ 
+      //read from database
+      $query = "select * from users where username='$UserName' limit 1";
+      
 
-  if (mysqli_num_rows($result) == 1) {
-    $row = mysqli_fetch_assoc($result);
-    $_SESSION["username"] = $row["username"];
-    $_SESSION["id"] = $row["id"];
-    if ($username == "admin") { // Check if the username is "admin"
-      header("Location: admin.php"); // Redirect to admin.php
-    } else {
-      header("Location: dashboard.php");
-    }
-    exit();
-  } else {
-    $error = "Invalid username or password";
+      $result=mysqli_query($con,$query);
+      if($result){
+           if($result && mysqli_num_rows($result)>0){
+          $user_data = mysqli_fetch_assoc(($result));
+          if($user_data['password'] === $Password){
+              $_SESSION['active'] = $user_data;
+              if ($UserName === "admin") {
+                header("Location: admin.php");
+              } else {
+                header("Location: dashboard.php");
+              }
+          }else{
+              echo 'Incorrect password';
+          }
+           }
+      }      
   }
-}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -78,10 +83,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <input type="password" name="Password" placeholder="Enter your password" required>
       </div>
       <br/> 
-      <?php if(isset($error)) { echo "<div class='error'>$error</div>"; } ?>
+      <?php if(isset($error)) { echo "<div class='error'</div>"; } ?>
       <div class="Submit_button">
         <button>login</button>
       </div>   
+      </form>
+
       <br>
       <br>
       <div class="sign_up">
